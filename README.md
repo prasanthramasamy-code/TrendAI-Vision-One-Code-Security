@@ -1,1 +1,0 @@
-# TrendAI-Vision-One-Code-Security
