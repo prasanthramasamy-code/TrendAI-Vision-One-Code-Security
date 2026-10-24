@@ -1,0 +1,46 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Demo IAM user and access key for testing"
+
+Resources:
+  DemoIAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: demo-cloudformation-user
+      Tags:
+        - Key: Environment
+          Value: Demo
+
+  DemoIAMPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DemoEC2ReadOnlyPolicy
+      Users:
+        - !Ref DemoIAMUser
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - ec2:DescribeInstances
+              - ec2:DescribeRegions
+            Resource: "*"
+
+  DemoAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref DemoIAMUser
+      Status: Active
+
+Outputs:
+  IAMUserName:
+    Description: Created IAM username
+    Value: !Ref DemoIAMUser
+
+  AccessKeyId:
+    Description: Generated access key ID
+    Value: !Ref DemoAccessKey
+
+  SecretAccessKey:
+    Description: Generated secret access key
+    Value: !GetAtt DemoAccessKey.SecretAccessKey
